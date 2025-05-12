@@ -6,6 +6,7 @@ public class Grade {
     private String subjectName; // e.g., "CALCULUS I"
     private Double score;       // e.g., 18.0
     private String userId;      // Reference to Supabase user
+    private String feedback;
 
     // Manual getters/setters (since Lombok isn't working)
     public String getId() { return id; }
@@ -17,5 +18,7 @@ public class Grade {
     public Double getScore() { return score; }
     public void setScore(Double score) { this.score = score; }
     public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
+    public void setUserId(String feedback) { this.feedback = feedback; }
+    public String getFeedback() { return feedback; }
+    public void setFeedback(String feedback) { this.feedback = feedback; }
 }

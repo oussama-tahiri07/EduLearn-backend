@@ -19,6 +19,8 @@ public class SignupRequest {
     @NotBlank(message = "Password confirmation is required")
     private String repassword;
     
+    private String role = "RESTRICTED";
+    
     public String getUsername() {
         return username;
     }

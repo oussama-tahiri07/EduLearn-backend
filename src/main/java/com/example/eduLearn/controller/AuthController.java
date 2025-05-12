@@ -1,6 +1,5 @@
 package com.example.eduLearn.controller;
 
-import com.example.eduLearn.dto.*;
 import com.example.eduLearn.dto.request.AuthRequest;
 import com.example.eduLearn.dto.request.SignupRequest;
 import com.example.eduLearn.dto.response.AuthResponse;
