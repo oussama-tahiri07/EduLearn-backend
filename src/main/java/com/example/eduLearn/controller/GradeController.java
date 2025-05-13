@@ -4,6 +4,7 @@ import com.example.eduLearn.model.Grade;
 import com.example.eduLearn.service.SupabaseGradeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -20,60 +21,68 @@ public class GradeController {
         this.gradeService = gradeService;
     }
 
-    // Create
+    // ================= TEACHER ENDPOINTS ================= //
     @PostMapping
-    public ResponseEntity<Grade> createGrade(
+    @PreAuthorize("hasRole('teacher')")
+    public ResponseEntity<Grade> submitGrade(
             @RequestBody Grade grade,
             @AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getSubject();
-        Grade createdGrade = gradeService.createGrade(grade, userId);
+        String teacherId = jwt.getSubject();
+        Grade createdGrade = gradeService.submitGrade(grade, teacherId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdGrade);
     }
 
-    // Read (All for user)
-    @GetMapping
-    public List<Grade> getGrades(@AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getSubject();
-        return gradeService.getGradesByUser(userId);
-    }
-
-    // Read (Single grade)
-    @GetMapping("/{id}")
-    public ResponseEntity<Grade> getGrade(
-            @PathVariable String id,
-            @AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getSubject();
-        Grade grade = gradeService.getGradeById(id, userId);
-        return ResponseEntity.ok(grade);
-    }
-
-    // Update
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('teacher')")
     public ResponseEntity<Grade> updateGrade(
             @PathVariable String id,
             @RequestBody Grade gradeDetails,
             @AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getSubject();
-        Grade updatedGrade = gradeService.updateGrade(id, gradeDetails, userId);
+        String teacherId = jwt.getSubject();
+        Grade updatedGrade = gradeService.updateGrade(id, gradeDetails, teacherId);
         return ResponseEntity.ok(updatedGrade);
     }
 
-    // Delete
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGrade(
-            @PathVariable String id,
+    @GetMapping("/class/{classId}")
+    @PreAuthorize("hasRole('teacher')")
+    public List<Grade> getClassGrades(
+            @PathVariable String classId,
             @AuthenticationPrincipal Jwt jwt) {
-        String userId = jwt.getSubject();
-        gradeService.deleteGrade(id, userId);
-        return ResponseEntity.noContent().build();
+        String teacherId = jwt.getSubject();
+        return gradeService.getGradesByClass(classId, teacherId);
     }
 
-    // Admin endpoint to get all grades (for teachers/admins)
-    @GetMapping("/admin/all")
-    public ResponseEntity<List<Grade>> getAllGrades(
+    // ================= STUDENT ENDPOINTS ================= //
+    @GetMapping
+    @PreAuthorize("hasRole('student')")
+    public List<Grade> getStudentGrades(
             @AuthenticationPrincipal Jwt jwt) {
-        // In a real app, verify user has admin/teacher role here
+        String studentId = jwt.getSubject();
+        return gradeService.getGradesByStudent(studentId);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('student')")
+    public ResponseEntity<Grade> getGrade(
+            @PathVariable String id,
+            @AuthenticationPrincipal Jwt jwt) {
+        String studentId = jwt.getSubject();
+        Grade grade = gradeService.getGradeById(id, studentId);
+        return ResponseEntity.ok(grade);
+    }
+
+    // ================= ADMIN ENDPOINTS ================= //
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<List<Grade>> getAllGrades() {
         List<Grade> grades = gradeService.getAllGrades();
         return ResponseEntity.ok(grades);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<Void> deleteGrade(@PathVariable String id) {
+        gradeService.deleteGrade(id);
+        return ResponseEntity.noContent().build();
     }
 }

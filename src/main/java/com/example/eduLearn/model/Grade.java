@@ -1,14 +1,22 @@
 package com.example.eduLearn.model;
 
-public class Grade {
-    private String id;          // Matches Supabase's UUID or BigInt
-    private String subjectCode; // e.g., "I12-S1"
-    private String subjectName; // e.g., "CALCULUS I"
-    private Double score;       // e.g., 18.0
-    private String userId;      // Reference to Supabase user
-    private String feedback;
+import java.time.LocalDateTime;
 
-    // Manual getters/setters (since Lombok isn't working)
+public class Grade {
+	private String id;           // UUID
+    private String subjectCode;  // e.g., "MATH101"
+    private String subjectName;  // e.g., "Calculus I"
+    private Double score;        // 0.0 - 100.0
+    private String studentId;    // Supabase user_id of student (from JWT)
+    private String teacherId;    // Supabase user_id of teacher (auto-filled)
+    private String classId;      // Links to the class
+    private String feedback;
+    private LocalDateTime gradedAt;
+    
+    public Grade() {
+        this.gradedAt = LocalDateTime.now();
+    }
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getSubjectCode() { return subjectCode; }
@@ -17,8 +25,17 @@ public class Grade {
     public void setSubjectName(String subjectName) { this.subjectName = subjectName; }
     public Double getScore() { return score; }
     public void setScore(Double score) { this.score = score; }
-    public String getUserId() { return userId; }
-    public void setUserId(String feedback) { this.feedback = feedback; }
+    public String getUserId() { return studentId; }
+    public void setUserId(String studentId) { this.studentId = studentId; }
     public String getFeedback() { return feedback; }
     public void setFeedback(String feedback) { this.feedback = feedback; }
+	public String getStudentId() { return studentId; }
+	public void setStudentId(String studentId) { this.studentId = studentId; }
+	public String getTeacherId() { return teacherId; }
+	public void setTeacherId(String teacherId) { this.teacherId = teacherId; }
+	public String getClassId() { return classId; }
+	public void setClassId(String classId) { this.classId = classId; }
+	public LocalDateTime getGradedAt() { return gradedAt; }
+	public void setGradedAt(LocalDateTime gradedAt) { this.gradedAt = gradedAt; }
+    
 }

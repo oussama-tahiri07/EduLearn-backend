@@ -103,6 +103,11 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+        	<groupId>tests.projets.agiles</groupId>
+        	<artifactId>TP_Exemple_TestUnitaire</artifactId>
+        	<version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

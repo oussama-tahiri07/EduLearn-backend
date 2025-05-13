@@ -155,7 +155,7 @@ public class SupabaseAuthServiceImpl implements AuthService {
 
     private boolean isValidRole(String role) {
         // Define your valid roles
-        Set<String> validRoles = Set.of("RESTRICTED", "USER", "EDITOR", "ADMIN");
+        Set<String> validRoles = Set.of("RESTRICTED", "USER", "TEACHER", "ADMIN");
         return validRoles.contains(role);
     }
 
